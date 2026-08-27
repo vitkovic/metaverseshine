@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Metaverse Lobby</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <link rel="stylesheet" href="/css/chat.css">
+</head>
+
+<body>
+
+<form method="post" action="/logout"
+      style="position:absolute; z-index:10; top:10px; right:10px;">
+  <button type="submit">Logout</button>
+</form>
+
+<div id="userInfo"
+     style="position:absolute; z-index:10; top:10px; left:10px; color:white; font-family:Arial; background:rgba(0,0,0,0.5); padding:8px;">
+  Loading user...
+</div>
+<div id="onlineUsersPanel"
+     style="
+       position:absolute;
+       z-index:10;
+       top:90px;
+       left:10px;
+       width:250px;
+       max-height:400px;
+       overflow-y:auto;
+       color:white;
+       font-family:Arial;
+       background:rgba(0,0,0,0.65);
+       padding:10px;
+       border:1px solid #555;
+     ">
+
+  <div id="onlineUsersTitle"
+       style="font-weight:bold; margin-bottom:10px;">
+    Online Users (0)
+  </div>
+
+  <div id="onlineUsersList">
+    Loading...
+  </div>
+
+</div>
+
+<div id="interactionHint"
+     style="display:none; position:absolute; z-index:10; bottom:40px; left:50%; transform:translateX(-50%); color:white; font-family:Arial; background:rgba(0,0,0,0.7); padding:10px 16px; border:1px solid #22c55e;">
+  Press E or left click to enter
+</div>
+
+<a-scene background="color:#001133"  vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false">
+	
+	
+	<a-assets>
+	  <img id="leftImage" src="/assets/iL.jpg">
+	</a-assets>
+	
+	<a-assets>
+	  <img id="rightImage" src="/assets/iR.jpg">
+	</a-assets>
+	
+	
+	
+
+  <a-entity id="player"
+            position="0 1.6 4"
+            wasd-controls="acceleration:20"
+            look-controls
+            lobby-limit>
+
+    <a-entity camera position="0 0 0">
+      <a-cursor id="centerCursor"
+                color="#ffffff"
+                fuse="false"
+                raycaster="objects: .clickable-door">
+      </a-cursor>
+    </a-entity>
+
+  </a-entity>
+
+  <a-plane position="0 0 0"
+           rotation="-90 0 0"
+           width="16"
+           height="16"
+           color="#2d3748">
+  </a-plane>
+  
+  <a-plane position="0 0.01 -1"
+           rotation="-90 0 0"
+           width="5"
+           height="11"
+           color="#1e3a8a">
+  </a-plane>
+
+  <a-plane position="0 0.02 -1"
+           rotation="-90 0 0"
+           width="4.6"
+           height="10.6"
+           color="#3a332b">
+  </a-plane>
+
+  <a-plane position="0 6 0"
+           rotation="90 0 0"
+           width="16"
+           height="16"
+           color="#111827">
+  </a-plane>
+
+  <!-- WALLS - BASE -->
+  <a-box position="0 3 -8" width="16" height="6" depth="0.2" color="#5f6b7a"></a-box>
+  <a-box position="0 3 8" width="16" height="6" depth="0.2" color="#4b5563"></a-box>
+  <a-box position="-8 3 0" width="0.2" height="6" depth="16" color="#566273"></a-box>
+  <a-box position="8 3 0" width="0.2" height="6" depth="16" color="#566273"></a-box>
+
+  <!-- BACK WALL LOWER PANEL -->
+  <a-box position="0 1.45 -7.86"
+         width="15.6"
+         height="2.2"
+         depth="0.05"
+         color="#495466">
+  </a-box>
+
+  <!-- BACK WALL UPPER PANEL -->
+  <a-box position="0 4.3 -7.86"
+         width="15.6"
+         height="2.1"
+         depth="0.05"
+         color="#6b7688">
+  </a-box>
+
+  <!-- BACK WALL HORIZONTAL TRIM -->
+  <a-box position="0 2.65 -7.78"
+         width="15.6"
+         height="0.08"
+         depth="0.08"
+         color="#d6d3d1">
+  </a-box>
+
+  <!-- SIDE WALL TRIMS -->
+  <a-box position="-7.88 2.65 0"
+         width="0.08"
+         height="0.08"
+         depth="15.6"
+         color="#d6d3d1">
+  </a-box>
+
+  <a-box position="7.88 2.65 0"
+         width="0.08"
+         height="0.08"
+         depth="15.6"
+         color="#d6d3d1">
+  </a-box>
+
+  <!-- LEFT WALL FRAMED IMAGE -->
+  <a-entity position="-7.70 3.80 -4.2" rotation="0 90 0">
+
+    <a-plane width="2.40"
+             height="1.60"
+             material="src:#leftImage; side:double">
+    </a-plane>
+
+    <a-box position="0 0.83 0.02"
+           width="2.55"
+           height="0.05"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="0 -0.83 0.02"
+           width="2.55"
+           height="0.05"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="-1.28 0 0.02"
+           width="0.05"
+           height="1.70"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="1.28 0 0.02"
+           width="0.05"
+           height="1.70"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+  </a-entity>
+
+
+  <!-- RIGHT WALL FRAMED IMAGE -->
+  <a-entity position="7.70 3.80 -4.2" rotation="0 -90 0">
+
+    <a-plane width="2.40"
+             height="1.60"
+             material="src:#rightImage; side:double">
+    </a-plane>
+
+    <a-box position="0 0.83 0.02"
+           width="2.55"
+           height="0.05"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="0 -0.83 0.02"
+           width="2.55"
+           height="0.05"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="-1.28 0 0.02"
+           width="0.05"
+           height="1.70"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+    <a-box position="1.28 0 0.02"
+           width="0.05"
+           height="1.70"
+           depth="0.04"
+           color="#374151">
+    </a-box>
+
+  </a-entity>
+    
+  <a-text value="METAVERSE LOBBY"
+          align="center"
+          position="0 5.3 -7.7"
+          width="8"
+          color="white">
+  </a-text>
+
+  <!-- INFO DESK -->
+
+  <a-box position="0 0.45 -4"
+         width="4.4"
+         height="0.85"
+         depth="1.25"
+         color="#2563eb">
+  </a-box>
+
+  <a-box position="0 0.50 -3.36"
+         width="4.0"
+         height="0.65"
+         depth="0.06"
+         color="#1e3a8a">
+  </a-box>
+
+  <a-box position="0 0.95 -4"
+         width="4.7"
+         height="0.12"
+         depth="1.45"
+         color="#d6d3d1">
+  </a-box>
+
+  <a-box position="-2.25 0.55 -4"
+         width="0.12"
+         height="0.9"
+         depth="1.35"
+         color="#1e40af">
+  </a-box>
+
+  <a-box position="2.25 0.55 -4"
+         width="0.12"
+         height="0.9"
+         depth="1.35"
+         color="#1e40af">
+  </a-box>
+
+  <a-text value="INFO DESK"
+          align="center"
+          position="0 0.62 -3.29"
+          width="4"
+          color="white">
+  </a-text>
+  
+  
+  <!-- KING NIKOLA PORTRAIT -->
+
+  <a-plane position="0 3.70 -7.78"
+           width="1.45"
+           height="1.75"
+           src="/assets/king.jpg">
+  </a-plane>
+
+  <!-- FRAME TOP -->
+  <a-box position="0 4.63 -7.84"
+         width="1.62"
+         height="0.08"
+         depth="0.06"
+         color="#d4af37">
+  </a-box>
+
+  <!-- FRAME BOTTOM -->
+  <a-box position="0 2.77 -7.84"
+         width="1.62"
+         height="0.08"
+         depth="0.06"
+         color="#d4af37">
+  </a-box>
+
+  <!-- FRAME LEFT -->
+  <a-box position="-0.81 3.70 -7.84"
+         width="0.08"
+         height="1.92"
+         depth="0.06"
+         color="#d4af37">
+  </a-box>
+
+  <!-- FRAME RIGHT -->
+  <a-box position="0.81 3.70 -7.84"
+         width="0.08"
+         height="1.92"
+         depth="0.06"
+         color="#d4af37">
+  </a-box>
+
+  <!-- NAME PLATE -->
+  <a-box position="0 2.47 -7.83"
+         width="1.30"
+         height="0.22"
+         depth="0.06"
+         color="#8b5a2b">
+  </a-box>
+
+  <a-text value="KING NIKOLA"
+          align="center"
+          position="0 2.49 -7.74"
+          width="4"
+          color="white">
+  </a-text>
+
+  
+
+  <!-- WHITEBOARD ROOM DOOR -->
+
+  <a-box position="6 2.4 -7.7"
+         width="2.2"
+         height="4.8"
+         depth="0.15"
+         color="#0f766e">
+  </a-box>
+
+  <a-box position="4.85 2.4 -7.72" width="0.12" height="5.0" depth="0.25" color="#374151"></a-box>
+  <a-box position="7.15 2.4 -7.72" width="0.12" height="5.0" depth="0.25" color="#374151"></a-box>
+  <a-box position="6 4.9 -7.72" width="2.42" height="0.12" depth="0.25" color="#374151"></a-box>
+
+  <a-sphere position="6.75 2.3 -7.55"
+            radius="0.08"
+            color="#fbbf24">
+  </a-sphere>
+
+  <a-text value="WHITEBOARD ROOM"
+          align="center"
+          position="6 4.2 -7.55"
+          width="3"
+          color="white">
+  </a-text>
+
+  <a-text value="🚪"
+          align="center"
+          position="6 2.7 -7.54"
+          width="4"
+          color="white">
+  </a-text>
+
+  <a-plane id="whiteboardDoorClick"
+           class="clickable-door"
+           door-link="url: /rooms/whiteboard/whiteboard.html"
+           position="6 2.4 -7.45"
+           width="2.2"
+           height="4.8"
+           material="opacity:0.01; transparent:true">
+  </a-plane>
+
+  <!-- MEETING ROOM DOOR -->
+
+  <a-box position="-6 2.4 -7.7"
+         width="2.2"
+         height="4.8"
+         depth="0.15"
+         color="#1d4ed8">
+  </a-box>
+
+  <a-box position="-7.15 2.4 -7.72" width="0.12" height="5.0" depth="0.25" color="#374151"></a-box>
+  <a-box position="-4.85 2.4 -7.72" width="0.12" height="5.0" depth="0.25" color="#374151"></a-box>
+  <a-box position="-6 4.9 -7.72" width="2.42" height="0.12" depth="0.25" color="#374151"></a-box>
+
+  <a-sphere position="-5.25 2.3 -7.55"
+            radius="0.08"
+            color="#fbbf24">
+  </a-sphere>
+
+  <a-text value="MEETING ROOM"
+          align="center"
+          position="-6 4.2 -7.55"
+          width="3"
+          color="white">
+  </a-text>
+
+  <a-text value="👥"
+          align="center"
+          position="-6 2.7 -7.54"
+          width="4"
+          color="white">
+  </a-text>
+
+  <a-plane id="meetingDoorClick"
+           class="clickable-door"
+           door-link="url: /rooms/meeting/meeting.html"
+           position="-6 2.4 -7.45"
+           width="2.2"
+           height="4.8"
+           material="opacity:0.01; transparent:true">
+  </a-plane>
+
+  <a-light type="ambient" intensity="0.7"></a-light>
+  <a-light type="point" position="0 3 0" intensity="1.2"></a-light>
+
+</a-scene>
+
+<script>
+fetch("/me")
+  .then(res => res.json())
+  .then(user => {
+    document.getElementById("userInfo").innerHTML =
+      "<b>" + user.name + "</b><br>Role: " + user.role;
+  });
+</script>
+
+<script>
+AFRAME.registerComponent("lobby-limit", {
+  tick: function () {
+    const p = this.el.object3D.position;
+
+    if (p.x < -7.5) p.x = -7.5;
+    if (p.x >  7.5) p.x =  7.5;
+    if (p.z < -7.5) p.z = -7.5;
+    if (p.z >  7.5) p.z =  7.5;
+
+    p.y = 1.6;
+  }
+});
+</script>
+
+<script>
+let activeDoorUrl = null;
+
+function enterActiveDoor() {
+  if (activeDoorUrl) {
+    window.location.href = activeDoorUrl;
+  }
+}
+
+AFRAME.registerComponent("door-link", {
+  schema: {
+    url: { type: "string" }
+  },
+
+  init: function () {
+    const cursor = document.getElementById("centerCursor");
+    const hint = document.getElementById("interactionHint");
+
+    this.el.addEventListener("mouseenter", () => {
+      activeDoorUrl = this.data.url;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#22c55e");
+        cursor.setAttribute("scale", "1.5 1.5 1.5");
+      }
+
+      if (hint) {
+        hint.style.display = "block";
+      }
+    });
+
+    this.el.addEventListener("mouseleave", () => {
+      activeDoorUrl = null;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#ffffff");
+        cursor.setAttribute("scale", "1 1 1");
+      }
+
+      if (hint) {
+        hint.style.display = "none";
+      }
+    });
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "e" || e.key === "E") {
+    enterActiveDoor();
+  }
+});
+
+document.addEventListener("mousedown", e => {
+  if (activeDoorUrl) {
+    e.preventDefault();
+    enterActiveDoor();
+  }
+});
+</script>
+
+<script>
+window.socket = io();
+window.roomName = "lobby";
+
+window.socket.on("connect", () => {
+  console.log("Connected:", window.socket.id);
+});
+</script>
+<script>
+window.socket.on("onlineUsersUpdate", users => {
+  const list = document.getElementById("onlineUsersList");
+
+  const title = document.getElementById("onlineUsersTitle");
+  
+  if (title) {
+    title.innerHTML = `Online Users (${users.length})`;
+  }
+  
+  
+  
+  if (!list) return;
+
+  if (!users || users.length === 0) {
+    list.innerHTML = "No users online";
+    return;
+  }
+
+  list.innerHTML = users.map(user => {
+    return `
+      <div style="margin-bottom:6px;">
+        <span style="color:${user.color}; font-weight:bold;">●</span>
+        ${user.name}
+        <br>
+        <span style="color:#cbd5e1; font-size:12px;">
+          ${user.role} / ${user.room}
+        </span>
+      </div>
+    `;
+  }).join("");
+});
+</script>
+<script src="/js/avatars.js"></script>
+<script src="/js/chat.js"></script>
+
+</body>
+</html>

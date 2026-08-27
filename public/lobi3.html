@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+PRESERVED ORIGINAL PREFIX
+Ovi elementi su u originalnom fajlu stajali pre <!DOCTYPE html>.
+Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
+
+<a-plane
+    id="meetingDoorClick"
+    class="clickable-door"
+    door-link="url:/rooms/meeting/meeting.html"
+    position="X Y Z"
+    rotation="RX RY RZ"
+    width="W"
+    height="H"
+    material="opacity:0.01;transparent:true;side:double">
+</a-plane>
+
+<a-plane
+    id="whiteboardDoorClick"
+    class="clickable-door"
+    door-link="url:/rooms/whiteboard/whiteboard.html"
+    position="X Y Z"
+    rotation="RX RY RZ"
+    width="W"
+    height="H"
+    material="opacity:0.01;transparent:true;side:double">
+</a-plane>
+-->
+
+
+  <meta charset="utf-8">
+  <title>Metaverse Lobby</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <link rel="stylesheet" href="/css/chat.css">
+</head>
+
+<body>
+
+<!-- ===== UI ===== -->
+
+<form method="post" action="/logout"
+      style="position:absolute; z-index:10; top:10px; right:10px;">
+  <button type="submit">Logout</button>
+</form>
+
+<div id="userInfo"
+     style="position:absolute; z-index:10; top:10px; left:10px; color:white; font-family:Arial; background:rgba(0,0,0,0.5); padding:8px;">
+  Loading user...
+</div>
+<div id="onlineUsersPanel"
+     style="
+       position:absolute;
+       z-index:10;
+       top:90px;
+       left:10px;
+       width:250px;
+       max-height:400px;
+       overflow-y:auto;
+       color:white;
+       font-family:Arial;
+       background:rgba(0,0,0,0.65);
+       padding:10px;
+       border:1px solid #555;
+     ">
+
+  <div id="onlineUsersTitle"
+       style="font-weight:bold; margin-bottom:10px;">
+    Online Users (0)
+  </div>
+
+  <div id="onlineUsersList">
+    Loading...
+  </div>
+
+</div>
+
+<div style="
+     position:absolute;
+     z-index:10;
+     top:200px;
+     left:10px;
+     font-family:Arial;">
+
+  <button id="completeMoodleBtn">
+    Complete Moodle activity
+  </button>
+
+  <div id="moodleStatus"
+       style="color:white; margin-top:6px;">
+  </div>
+</div>
+
+<div id="interactionHint"
+     style="display:none; position:absolute; z-index:10; bottom:40px; left:50%; transform:translateX(-50%); color:white; font-family:Arial; background:rgba(0,0,0,0.7); padding:10px 16px; border:1px solid #22c55e;">
+  Press E or left click to enter
+</div>
+
+<!-- ===== A-FRAME SCENE ===== -->
+<a-scene background="color:#001133"  vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false">
+
+	<a-assets timeout="60000">
+    <a-asset-item id="lobbyModel" src="/assets/models/rm1.0.glb"></a-asset-item>
+  </a-assets>
+
+	
+
+  <a-entity id="player"
+            position="0 1.6 4"
+            wasd-controls="acceleration:20"
+            look-controls
+            lobby-limit>
+
+    <a-entity camera position="0 0 0">
+      <a-cursor id="centerCursor"
+                color="#ffffff"
+                fuse="false"
+                raycaster="objects: .clickable-door">
+      </a-cursor>
+    </a-entity>
+
+  </a-entity>
+
+  <!-- GLB model centered around the original index.html camera -->
+  <a-entity id="lobbyEnvironment"
+            gltf-model="#lobbyModel"
+            position="1.03 0.225 36"
+            rotation="0 0 0"
+            scale="0.01 0.01 0.01">
+  </a-entity>
+
+  <!-- MEETING ROOM: hotspot izveden iz stvarnog Box004 / MR materijala u rm1.0.glb -->
+  <a-plane id="meetingDoorClick"
+           class="clickable-door"
+           door-link="url: /rooms/meeting/meeting.html"
+           position="-6.382 1.758 -5.781"
+           rotation="0 77.413 0"
+           width="1.50"
+           height="0.80"
+           material="opacity:0.015; transparent:true; side:double; depthTest:false">
+  </a-plane>
+
+  <!-- WHITEBOARD ROOM: hotspot izveden iz stvarnog Rectangle077 / WR materijala u rm1.0.glb -->
+  <a-plane id="whiteboardDoorClick"
+           class="clickable-door"
+           door-link="url: /rooms/whiteboard/whiteboard.html"
+           position="5.500 1.534 -0.449"
+           rotation="0 135 0"
+           width="1.40"
+           height="0.80"
+           material="opacity:0.015; transparent:true; side:double; depthTest:false">
+  </a-plane>
+
+  <a-light type="ambient" intensity="0.7"></a-light>
+  <a-light type="point" position="0 3 0" intensity="1.2"></a-light>
+
+</a-scene>
+
+<!-- ===== USER INFO ===== -->
+<script>
+fetch("/me")
+  .then(res => res.json())
+  .then(user => {
+    document.getElementById("userInfo").innerHTML =
+      "<b>" + user.name + "</b><br>Role: " + user.role;
+  });
+</script>
+
+<!-- ===== LOBBY MOVEMENT LIMITS ===== -->
+<script>
+AFRAME.registerComponent("lobby-limit", {
+  tick: function () {
+    const p = this.el.object3D.position;
+
+    if (p.x < -7.5) p.x = -7.5;
+    if (p.x >  7.5) p.x =  7.5;
+    if (p.z < -9.0) p.z = -9.0;
+    if (p.z >  4.0) p.z =  4.0;
+
+    p.y = 1.6;
+  }
+});
+</script>
+
+<!-- ===== ROOM HOTSPOT INTERACTION ===== -->
+<script>
+let activeDoorUrl = null;
+
+function enterActiveDoor() {
+  if (activeDoorUrl) {
+    window.location.href = activeDoorUrl;
+  }
+}
+
+AFRAME.registerComponent("door-link", {
+  schema: {
+    url: { type: "string" }
+  },
+
+  init: function () {
+    const cursor = document.getElementById("centerCursor");
+    const hint = document.getElementById("interactionHint");
+
+    this.el.addEventListener("mouseenter", () => {
+      activeDoorUrl = this.data.url;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#22c55e");
+        cursor.setAttribute("scale", "1.5 1.5 1.5");
+      }
+
+      if (hint) {
+        hint.style.display = "block";
+      }
+    });
+
+    this.el.addEventListener("mouseleave", () => {
+      activeDoorUrl = null;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#ffffff");
+        cursor.setAttribute("scale", "1 1 1");
+      }
+
+      if (hint) {
+        hint.style.display = "none";
+      }
+    });
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "e" || e.key === "E") {
+    enterActiveDoor();
+  }
+});
+
+document.addEventListener("mousedown", e => {
+  if (activeDoorUrl) {
+    e.preventDefault();
+    enterActiveDoor();
+  }
+});
+</script>
+
+<!-- ===== SOCKET ===== -->
+<script>
+window.socket = io();
+window.roomName = "lobby";
+
+window.socket.on("connect", () => {
+  console.log("Connected:", window.socket.id);
+});
+</script>
+<script>
+window.socket.on("onlineUsersUpdate", users => {
+  const list = document.getElementById("onlineUsersList");
+
+  const title = document.getElementById("onlineUsersTitle");
+  
+  if (title) {
+    title.innerHTML = `Online Users (${users.length})`;
+  }
+
+  
+  if (!list) return;
+
+  if (!users || users.length === 0) {
+    list.innerHTML = "No users online";
+    return;
+  }
+
+  list.innerHTML = users.map(user => {
+    return `
+      <div style="margin-bottom:6px;">
+        <span style="color:${user.color}; font-weight:bold;">●</span>
+        ${user.name}
+        <br>
+        <span style="color:#cbd5e1; font-size:12px;">
+          ${user.role} / ${user.room}
+        </span>
+      </div>
+    `;
+  }).join("");
+});
+</script>
+<!-- ===== SHARED CLIENT SCRIPTS ===== -->
+<script src="/js/avatars.js"></script>
+<script src="/js/chat.js"></script>
+
+<!-- ===== SMOOTH CAMERA ZOOM ===== -->
+<script>
+/* Smooth mouse-wheel zoom for the lobby camera.
+   Scroll up = zoom in, scroll down = zoom out. */
+(function () {
+  const scene = document.querySelector("a-scene");
+
+  function enableSmoothWheelZoom() {
+    const cameraEl = document.querySelector("#player [camera]");
+    if (!cameraEl) return;
+
+    let currentFov = Number(cameraEl.getAttribute("camera")?.fov) || 80;
+    let targetFov = currentFov;
+
+    const MIN_FOV = 30;
+    const MAX_FOV = 100;
+    const WHEEL_SENSITIVITY = 0.035;
+    const SMOOTHING = 0.16;
+
+    let rafId = null;
+
+    function animateZoom() {
+      const diff = targetFov - currentFov;
+
+      if (Math.abs(diff) < 0.01) {
+        currentFov = targetFov;
+        cameraEl.setAttribute("camera", "fov", currentFov);
+        rafId = null;
+        return;
+      }
+
+      currentFov += diff * SMOOTHING;
+      cameraEl.setAttribute("camera", "fov", currentFov);
+      rafId = requestAnimationFrame(animateZoom);
+    }
+
+    window.addEventListener("wheel", function (e) {
+      if (e.target.closest &&
+          e.target.closest("#userInfo, #onlineUsersPanel, form")) {
+        return;
+      }
+
+      e.preventDefault();
+
+      targetFov += e.deltaY * WHEEL_SENSITIVITY;
+      targetFov = Math.max(MIN_FOV, Math.min(MAX_FOV, targetFov));
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(animateZoom);
+      }
+    }, { passive: false });
+  }
+
+  if (scene && scene.hasLoaded) {
+    enableSmoothWheelZoom();
+  } else if (scene) {
+    scene.addEventListener("loaded", enableSmoothWheelZoom, { once: true });
+  }
+})();
+
+</script>
+<script>
+document.getElementById("completeMoodleBtn").addEventListener("click", async () => {
+
+  const status = document.getElementById("moodleStatus");
+  status.textContent = "Sending...";
+
+  try {
+    const response = await fetch("/api/moodle/complete-test", {
+      method: "POST"
+    });
+
+    const data = await response.json();
+
+    console.log("Moodle response:", data);
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Moodle update failed");
+    }
+
+    status.textContent = "Moodle activity completed ✓";
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Error: " + err.message;
+  }
+
+});
+</script>
+
+</body>
+</html>
