@@ -120,7 +120,7 @@ app.get("/", (req, res) => {
     return res.redirect("/login.html");
   }
 
-  res.redirect("/index.html");
+  res.redirect("/lobi_shine_h.html");
 });
 
 app.post("/login", (req, res) => {
@@ -141,16 +141,16 @@ app.post("/login", (req, res) => {
     color: user.color
   };
 
-  req.session.lobby = lobby === "lobi3_shine_h" ? "lobi3_shine_h" : "index";
+  req.session.lobby = lobby === "lobi_shine_h" ? "lobi_shine_h" : "index";
   
   return res.redirect(
-    lobby === "lobi3_shine_h" ? "/lobi3_shine_h.html" : "/index.html"
+    lobby === "lobi_shine_h" ? "/lobi_shine_h.html" : "/index.html"
   );
 });
 app.get("/lobby", requireLogin, (req, res) => {
   res.json({
-    url: req.session.lobby === "lobi3_shine_h"
-      ? "/lobi3_shine_h.html"
+    url: req.session.lobby === "lobi_shine_h"
+      ? "/lobi_shine_h.html"
       : "/index.html"
   });
 });
@@ -209,7 +209,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.use("/index.html", requireLogin);
-app.use("/lobi3_shine_h.html", requireLogin);
+app.use("/lobi_shine_h.html", requireLogin);
 app.use("/rooms", requireLogin);
 
 app.use(express.static(path.join(__dirname, "public")));
