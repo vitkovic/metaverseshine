@@ -80,6 +80,7 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
 </div>
 
 <div style="
+     display:none;
      position:absolute;
      z-index:10;
      top:200px;
@@ -105,13 +106,13 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
         device-orientation-permission-ui="enabled: false">
 
 	<a-assets timeout="60000">
-    <a-asset-item id="lobbyModel" src="/assets/models/rm1.0.glb"></a-asset-item>
+    <a-asset-item id="lobbyModel" src="/assets/models/vr_metaverse_spaceship_interior_08.glb"></a-asset-item>
   </a-assets>
 
 	
 
   <a-entity id="player"
-            position="0 1.6 4"
+             position="0 1.6 2.8"
             wasd-controls="acceleration:20"
             look-controls
             lobby-limit>
@@ -128,14 +129,15 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
 
   <!-- GLB model centered around the original index.html camera -->
   <a-entity id="lobbyEnvironment"
-            gltf-model="#lobbyModel"
-            position="1.03 0.225 36"
-            rotation="0 0 0"
-            scale="0.01 0.01 0.01">
+             gltf-model="#lobbyModel"
+             position="0 0 0"
+             rotation="0 0 0"
+             scale="1 1 1">
   </a-entity>
 
   <!-- MEETING ROOM: hotspot izveden iz stvarnog Box004 / MR materijala u rm1.0.glb -->
-  <a-plane id="meetingDoorClick"
+  <!-- TEMP DISABLED FOR MODEL VISIBILITY TEST
+<a-plane id="meetingDoorClick"
            class="clickable-door"
            door-link="url: /rooms/meeting/meeting.html"
            position="-6.382 1.758 -5.781"
@@ -144,9 +146,11 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
            height="0.80"
            material="opacity:0.015; transparent:true; side:double; depthTest:false">
   </a-plane>
+-->
 
   <!-- WHITEBOARD ROOM: hotspot izveden iz stvarnog Rectangle077 / WR materijala u rm1.0.glb -->
-  <a-plane id="whiteboardDoorClick"
+  <!-- TEMP DISABLED FOR MODEL VISIBILITY TEST
+<a-plane id="whiteboardDoorClick"
            class="clickable-door"
            door-link="url: /rooms/whiteboard/whiteboard.html"
            position="5.500 1.534 -0.449"
@@ -155,9 +159,32 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
            height="0.80"
            material="opacity:0.015; transparent:true; side:double; depthTest:false">
   </a-plane>
+-->
 
-  <a-light type="ambient" intensity="0.7"></a-light>
-  <a-light type="point" position="0 3 0" intensity="1.2"></a-light>
+  <!-- ACTIVE HOTSPOTS FOR INTERIOR 08 - coordinates from the actual GLB -->
+  <a-plane id="meetingDoorClick08"
+           class="clickable-door"
+           door-link="url: /rooms/meeting/meeting.html"
+           position="-4.70 1.55 -7.85"
+           rotation="0 0 0"
+           width="1.35"
+           height="2.50"
+           material="opacity:0.015; transparent:true; side:double; depthTest:false">
+  </a-plane>
+
+  <a-plane id="whiteboardDoorClick08"
+           class="clickable-door"
+           door-link="url: /rooms/whiteboard/whiteboard.html"
+           position="4.70 1.55 -7.85"
+           rotation="0 0 0"
+           width="1.35"
+           height="2.50"
+           material="opacity:0.015; transparent:true; side:double; depthTest:false">
+  </a-plane>
+
+
+  <a-light type="ambient" intensity="0.50"></a-light>
+  <a-light type="point" position="0 3 0" intensity="0.70"></a-light>
 
 </a-scene>
 
@@ -173,18 +200,7 @@ fetch("/me")
 
 <!-- ===== LOBBY MOVEMENT LIMITS ===== -->
 <script>
-AFRAME.registerComponent("lobby-limit", {
-  tick: function () {
-    const p = this.el.object3D.position;
-
-    if (p.x < -7.5) p.x = -7.5;
-    if (p.x >  7.5) p.x =  7.5;
-    if (p.z < -9.0) p.z = -9.0;
-    if (p.z >  4.0) p.z =  4.0;
-
-    p.y = 1.6;
-  }
-});
+AFRAME.registerComponent("lobby-limit", { tick: function () {} });
 </script>
 
 <!-- ===== ROOM HOTSPOT INTERACTION ===== -->

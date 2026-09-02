@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Metaverse Login</title>
+  <title>SHINE Metaverse Login</title>
 
   <style>
     body {
@@ -50,6 +50,7 @@
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 4px;
     }
 
     button:hover {
@@ -69,93 +70,32 @@
       margin-bottom: 15px;
       display: none;
     }
-
-    .lobby-choice {
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid #334155;
-    }
-
-    .lobby-choice-title {
-      text-align: center;
-      font-size: 14px;
-      color: #cbd5e1;
-      margin-bottom: 12px;
-    }
-
-    .lobby-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .lobby-option {
-      position: relative;
-    }
-
-    .lobby-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .lobby-option label {
-      display: block;
-      padding: 12px 8px;
-      text-align: center;
-      border: 1px solid #475569;
-      border-radius: 8px;
-      background: #0f172a;
-      color: #cbd5e1;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .lobby-option input:checked + label {
-      border-color: #3b82f6;
-      background: #1e3a8a;
-      color: white;
-      box-shadow: 0 0 0 1px #3b82f6 inset;
-    }
-
-    .lobby-option label:hover {
-      border-color: #60a5fa;
-    }
   </style>
 </head>
 
 <body>
 
   <div class="login-box">
-    <h2>Metaverse Login</h2>
+
+    <h2>SHINE Metaverse Login</h2>
 
     <div id="errorBox" class="error">
       Wrong username or password
     </div>
 
     <form method="post" action="/login">
+
       <label>Username</label>
       <input type="text" name="username" required>
 
       <label>Password</label>
       <input type="password" name="password" required>
 
+      <!-- SHINE always opens the dedicated SHINE lobby -->
+      <input type="hidden" name="lobby" value="lobi_shine_h">
 
-      <div class="lobby-choice">
-        <div class="lobby-choice-title">Choose lobby</div>
-        <div class="lobby-options">
-          <div class="lobby-option">
-            <input type="radio" id="classicLobby" name="lobby" value="index" checked>
-            <label for="classicLobby">Classic Lobby</label>
-          </div>
-          <div class="lobby-option">
-            <input type="radio" id="modernLobby" name="lobby" value="lobi3">
-            <label for="modernLobby">Modern Lobby</label>
-          </div>
-        </div>
-      </div>
+      <button type="submit">Login</button>
 
-      <button type="submit" style="margin-top:16px;">Login</button>
     </form>
 
     <div class="info">
@@ -165,6 +105,7 @@
       student / 1234<br>
       guest / 1234
     </div>
+
   </div>
 
   <script>

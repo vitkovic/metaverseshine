@@ -112,7 +112,7 @@ app.get("/moodle-entry", (req, res) => {
 
   console.log("Moodle user ID:", userid);
 
-  res.redirect("/lobi3.html");
+  res.redirect("/lobi_shine_h.html");
 });
 
 app.get("/", (req, res) => {
@@ -141,16 +141,16 @@ app.post("/login", (req, res) => {
     color: user.color
   };
 
-  req.session.lobby = lobby === "lobi3" ? "lobi3" : "index";
+  req.session.lobby = lobby === "lobi3_shine_h" ? "lobi3_shine_h" : "index";
   
   return res.redirect(
-    lobby === "lobi3" ? "/lobi3.html" : "/index.html"
+    lobby === "lobi3_shine_h" ? "/lobi3_shine_h.html" : "/index.html"
   );
 });
 app.get("/lobby", requireLogin, (req, res) => {
   res.json({
-    url: req.session.lobby === "lobi3"
-      ? "/lobi3.html"
+    url: req.session.lobby === "lobi3_shine_h"
+      ? "/lobi3_shine_h.html"
       : "/index.html"
   });
 });
@@ -209,7 +209,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.use("/index.html", requireLogin);
-app.use("/lobi3.html", requireLogin);
+app.use("/lobi3_shine_h.html", requireLogin);
 app.use("/rooms", requireLogin);
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -623,6 +623,6 @@ io.on("connection", socket => {
   });
 });
 
-server.listen(31079, () => {
+server.listen(31080, () => {
   console.log("Server running");
 });
