@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SHINE - U-TEAM Methodology Room</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="/css/chat.css">
+
+  <style>
+    body {
+      margin: 0;
+      background: #050812;
+      overflow: hidden;
+    }
+
+    #userInfo {
+      position: absolute;
+      z-index: 20;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      background: rgba(3, 8, 20, 0.82);
+      border: 1px solid rgba(70, 150, 255, 0.45);
+      padding: 8px 10px;
+      min-width: 165px;
+      box-shadow: 0 0 18px rgba(0, 130, 255, 0.18);
+    }
+
+    #onlineUsersPanel {
+      position: absolute;
+      z-index: 20;
+      top: 90px;
+      left: 10px;
+      width: 220px;
+      max-height: 300px;
+      overflow-y: auto;
+      color: white;
+      font-family: Arial, sans-serif;
+      background: rgba(3, 8, 20, 0.82);
+      border: 1px solid rgba(70, 150, 255, 0.45);
+      padding: 10px;
+      box-shadow: 0 0 18px rgba(0, 130, 255, 0.15);
+    }
+
+    #onlineUsersTitle {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    #interactionHint {
+      display: none;
+      position: absolute;
+      z-index: 30;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: Arial, sans-serif;
+      background: rgba(3, 8, 20, 0.9);
+      padding: 10px 16px;
+      border: 1px solid #57d7ff;
+      border-radius: 6px;
+      box-shadow: 0 0 18px rgba(87, 215, 255, 0.35);
+    }
+
+    .logoutForm {
+      position: absolute;
+      z-index: 20;
+      top: 10px;
+      right: 10px;
+    }
+
+    .logoutForm button {
+      background: rgba(3, 8, 20, 0.85);
+      color: white;
+      border: 1px solid rgba(255,255,255,.28);
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<form class="logoutForm" method="post" action="/logout">
+  <button type="submit">Logout</button>
+</form>
+
+<div id="userInfo">Loading user...</div>
+
+<div id="onlineUsersPanel">
+  <div id="onlineUsersTitle">Online Users (0)</div>
+  <div id="onlineUsersList">Loading...</div>
+</div>
+
+<div id="interactionHint">Press E or left click to enter</div>
+
+<a-scene
+  background="color:#050812"
+  renderer="colorManagement:true; physicallyCorrectLights:true; antialias:true"
+  vr-mode-ui="enabled:false"
+  device-orientation-permission-ui="enabled:false">
+
+  <!-- =========================================================
+       PLAYER / CAMERA
+       ========================================================= -->
+  <a-entity id="player"
+            position="0 1.65 4.6"
+            wasd-controls="acceleration:18"
+            look-controls
+            room-limit>
+
+    <a-entity camera position="0 0 0">
+      <a-cursor id="centerCursor"
+                color="#ffffff"
+                fuse="false"
+                raycaster="objects: .clickable-door">
+      </a-cursor>
+    </a-entity>
+  </a-entity>
+
+  <!-- =========================================================
+       ROOM SHELL
+       ========================================================= -->
+
+  <!-- Floor -->
+  <a-plane position="0 0 -2.3"
+           rotation="-90 0 0"
+           width="16"
+           height="20"
+           material="color:#10192a; metalness:0.55; roughness:0.28">
+  </a-plane>
+
+  <!-- Rear wall -->
+  <a-plane position="0 4.15 -9.7"
+           width="15"
+           height="8.3"
+           material="color:#0a1221; metalness:0.45; roughness:0.38">
+  </a-plane>
+
+  <!-- Side walls -->
+  <a-plane position="-7.5 4.15 -2.4"
+           rotation="0 90 0"
+           width="15"
+           height="8.3"
+           material="color:#0b1424; metalness:0.45; roughness:0.40">
+  </a-plane>
+
+  <a-plane position="7.5 4.15 -2.4"
+           rotation="0 -90 0"
+           width="15"
+           height="8.3"
+           material="color:#0b1424; metalness:0.45; roughness:0.40">
+  </a-plane>
+
+  <!-- Ceiling -->
+  <a-plane position="0 8.1 -2.3"
+           rotation="90 0 0"
+           width="16"
+           height="20"
+           material="color:#0b1220; metalness:0.40; roughness:0.42">
+  </a-plane>
+
+  <!-- =========================================================
+       NEON ARCHITECTURAL LIGHTING
+       ========================================================= -->
+
+  <!-- Ceiling neon strips -->
+  <a-box position="-5.0 7.72 -2.1"
+         width="0.08" height="0.06" depth="11.7"
+         material="shader:flat; color:#4cb7ff">
+  </a-box>
+
+  <a-box position="5.0 7.72 -2.1"
+         width="0.08" height="0.06" depth="11.7"
+         material="shader:flat; color:#4cb7ff">
+  </a-box>
+
+  <a-box position="0 7.78 -4.0"
+         width="0.08" height="0.06" depth="8.0"
+         material="shader:flat; color:#7a78ff">
+  </a-box>
+
+  <!-- Side wall neon rails -->
+  <a-box position="-7.22 5.8 -2.4"
+         width="0.06" height="0.06" depth="12.5"
+         rotation="0 0 0"
+         material="shader:flat; color:#198cff">
+  </a-box>
+
+  <a-box position="7.22 5.8 -2.4"
+         width="0.06" height="0.06" depth="12.5"
+         rotation="0 0 0"
+         material="shader:flat; color:#198cff">
+  </a-box>
+
+  <!-- Floor neon frame -->
+  <a-box position="0 0.035 -8.3"
+         width="12.4" height="0.05" depth="0.05"
+         material="shader:flat; color:#4dc8ff">
+  </a-box>
+  <a-box position="-6.2 0.035 -4.2"
+         width="0.05" height="0.05" depth="8.2"
+         material="shader:flat; color:#4dc8ff">
+  </a-box>
+  <a-box position="6.2 0.035 -4.2"
+         width="0.05" height="0.05" depth="8.2"
+         material="shader:flat; color:#4dc8ff">
+  </a-box>
+
+  <!-- =========================================================
+       MAIN U-TEAM WALL
+       ========================================================= -->
+
+  <!-- Outer illuminated frame -->
+  <a-plane position="0 4.55 -8.95"
+           width="14.2"
+           height="7.0"
+           material="color:#08111f; metalness:0.7; roughness:0.25">
+  </a-plane>
+
+  <a-box position="0 8.00 -8.82"
+         width="14.25" height="0.07" depth="0.07"
+         material="shader:flat; color:#4db8ff">
+  </a-box>
+  <a-box position="0 1.10 -8.82"
+         width="14.25" height="0.07" depth="0.07"
+         material="shader:flat; color:#4db8ff">
+  </a-box>
+  <a-box position="-7.10 4.55 -8.82"
+         width="0.07" height="6.90" depth="0.07"
+         material="shader:flat; color:#4db8ff">
+  </a-box>
+  <a-box position="7.10 4.55 -8.82"
+         width="0.07" height="6.90" depth="0.07"
+         material="shader:flat; color:#4db8ff">
+  </a-box>
+
+  <!-- Main title -->
+  <a-text value="U-TEAM METHODOLOGY"
+          align="center"
+          anchor="center"
+          baseline="center"
+          color="#eaf5ff"
+          width="8"
+          wrap-count="30"
+          scale="1.55 1.55 1.55"
+          position="0 7.45 -8.72">
+  </a-text>
+
+  <a-text value="Unified methodology for cross-disciplinary university teaching"
+          align="center"
+          anchor="center"
+          baseline="center"
+          color="#b8d8f5"
+          width="8"
+          wrap-count="48"
+          scale="0.88 0.88 0.88"
+          position="0 6.78 -8.72">
+  </a-text>
+
+  <!-- =========================================================
+       FOUR MAIN PANELS
+       ========================================================= -->
+
+  <!-- PANEL 1 -->
+  <a-entity position="-5.05 4.05 -8.68">
+    <a-plane id="overviewPanel"
+             class="clickable-door"
+             door-link="url:/rooms/uteam/uteam_overview.html"
+             width="3.05"
+             height="4.15"
+             material="color:#123b5d; metalness:0.25; roughness:0.30">
+    </a-plane>
+
+    <a-plane width="3.13"
+             height="4.23"
+             position="0 0 0.02"
+             material="color:#21c6ff; opacity:0.14; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="01"
+            color="#6fe5ff"
+            width="2"
+            scale="1.15 1.15 1.15"
+            position="-1.12 1.62 0.05">
+    </a-text>
+
+    <a-text value="U-TEAM&#10;OVERVIEW"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#ffffff"
+            width="2.6"
+            wrap-count="14"
+            scale="1.18 1.18 1.18"
+            position="0 0.72 0.05">
+    </a-text>
+
+    <a-text value="Framework &amp; Principles"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#d8e9f7"
+            width="2.6"
+            wrap-count="22"
+            scale="0.78 0.78 0.78"
+            position="0 -0.48 0.05">
+    </a-text>
+
+    <a-text value="PRESS E"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#6fe5ff"
+            width="2.3"
+            scale="0.88 0.88 0.88"
+            position="0 -1.58 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- PANEL 2 -->
+  <a-entity position="-1.70 4.05 -8.68">
+    <a-plane id="teach4tecPanel"
+             class="clickable-door"
+             door-link="url:/rooms/uteam/teach4tec.html"
+             width="3.05"
+             height="4.15"
+             material="color:#18492b; metalness:0.25; roughness:0.30">
+    </a-plane>
+
+    <a-plane width="3.13"
+             height="4.23"
+             position="0 0 0.02"
+             material="color:#77ff86; opacity:0.12; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="02"
+            color="#8dff9a"
+            width="2"
+            scale="1.15 1.15 1.15"
+            position="-1.12 1.62 0.05">
+    </a-text>
+
+    <a-text value="teach4TEC&#10;APPROACH"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#ffffff"
+            width="2.6"
+            wrap-count="14"
+            scale="1.12 1.12 1.12"
+            position="0 0.72 0.05">
+    </a-text>
+
+    <a-text value="Technical Education"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#d9f5dd"
+            width="2.6"
+            wrap-count="20"
+            scale="0.80 0.80 0.80"
+            position="0 -0.48 0.05">
+    </a-text>
+
+    <a-text value="PRESS E"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#8dff9a"
+            width="2.3"
+            scale="0.88 0.88 0.88"
+            position="0 -1.58 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- PANEL 3 -->
+  <a-entity position="1.70 4.05 -8.68">
+    <a-plane id="teach4phiPanel"
+             class="clickable-door"
+             door-link="url:/rooms/uteam/teach4phi.html"
+             width="3.05"
+             height="4.15"
+             material="color:#402551; metalness:0.25; roughness:0.30">
+    </a-plane>
+
+    <a-plane width="3.13"
+             height="4.23"
+             position="0 0 0.02"
+             material="color:#e683ff; opacity:0.12; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="03"
+            color="#f1a0ff"
+            width="2"
+            scale="1.15 1.15 1.15"
+            position="-1.12 1.62 0.05">
+    </a-text>
+
+    <a-text value="teach4PHI&#10;APPROACH"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#ffffff"
+            width="2.6"
+            wrap-count="14"
+            scale="1.12 1.12 1.12"
+            position="0 0.72 0.05">
+    </a-text>
+
+    <a-text value="Humanities &amp;&#10;Social Sciences"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#f0dff4"
+            width="2.6"
+            wrap-count="18"
+            scale="0.76 0.76 0.76"
+            position="0 -0.48 0.05">
+    </a-text>
+
+    <a-text value="PRESS E"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#f1a0ff"
+            width="2.3"
+            scale="0.88 0.88 0.88"
+            position="0 -1.58 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- PANEL 4 -->
+  <a-entity position="5.05 4.05 -8.68">
+    <a-plane id="unifiedPanel"
+             class="clickable-door"
+             door-link="url:/rooms/uteam/uteam_model.html"
+             width="3.05"
+             height="4.15"
+             material="color:#4d3a20; metalness:0.25; roughness:0.30">
+    </a-plane>
+
+    <a-plane width="3.13"
+             height="4.23"
+             position="0 0 0.02"
+             material="color:#ffbd4d; opacity:0.12; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="04"
+            color="#ffd071"
+            width="2"
+            scale="1.15 1.15 1.15"
+            position="-1.12 1.62 0.05">
+    </a-text>
+
+    <a-text value="UNIFIED&#10;U-TEAM MODEL"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#ffffff"
+            width="2.6"
+            wrap-count="14"
+            scale="1.06 1.06 1.06"
+            position="0 0.72 0.05">
+    </a-text>
+
+    <a-text value="Integrated Framework"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#f8e8c8"
+            width="2.6"
+            wrap-count="20"
+            scale="0.80 0.80 0.80"
+            position="0 -0.48 0.05">
+    </a-text>
+
+    <a-text value="PRESS E"
+            align="center"
+            anchor="center"
+            baseline="center"
+            color="#ffd071"
+            width="2.3"
+            scale="0.88 0.88 0.88"
+            position="0 -1.58 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- =========================================================
+       LEFT / RIGHT SIDE DOORS
+       ========================================================= -->
+
+  <!-- Meeting room door -->
+  <a-entity position="-6.75 2.45 -4.7" rotation="0 90 0">
+    <a-plane class="clickable-door"
+             door-link="url:/rooms/meeting/meeting.html"
+             width="2.7"
+             height="4.6"
+             material="color:#071420; metalness:0.55; roughness:0.25">
+    </a-plane>
+
+    <a-plane width="2.82"
+             height="4.72"
+             position="0 0 0.02"
+             material="color:#20b7ff; opacity:0.12; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="MEETING ROOM"
+            align="center"
+            color="#ffffff"
+            width="3.0"
+            position="0 1.45 0.05">
+    </a-text>
+
+    <a-text value="Collaboration & Discussions"
+            align="center"
+            color="#48cfff"
+            width="2.4"
+            position="0 1.05 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- Whiteboard room door -->
+  <a-entity position="6.75 2.45 -4.7" rotation="0 -90 0">
+    <a-plane class="clickable-door"
+             door-link="url:/rooms/whiteboard/whiteboard.html"
+             width="2.7"
+             height="4.6"
+             material="color:#071420; metalness:0.55; roughness:0.25">
+    </a-plane>
+
+    <a-plane width="2.82"
+             height="4.72"
+             position="0 0 0.02"
+             material="color:#b544ff; opacity:0.12; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="WHITEBOARD ROOM"
+            align="center"
+            color="#ffffff"
+            width="3.0"
+            position="0 1.45 0.05">
+    </a-text>
+
+    <a-text value="Ideation & Planning"
+            align="center"
+            color="#d281ff"
+            width="2.4"
+            position="0 1.05 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- =========================================================
+       SHINE FLOOR EMBLEM
+       ========================================================= -->
+
+  <a-circle position="0 0.055 1.15"
+            rotation="-90 0 0"
+            radius="2.15"
+            material="color:#0b1630; metalness:0.65; roughness:0.2">
+  </a-circle>
+
+  <a-torus position="0 0.075 1.15"
+           rotation="-90 0 0"
+           radius="2.15"
+           radius-tubular="0.025"
+           material="shader:flat; color:#4c87ff">
+  </a-torus>
+
+  <a-torus position="0 0.08 1.15"
+           rotation="-90 0 0"
+           radius="1.75"
+           radius-tubular="0.018"
+           material="shader:flat; color:#7b65ff">
+  </a-torus>
+
+  <a-text value="SHINE"
+          align="center"
+          color="#dce9ff"
+          width="5.1"
+          position="0 0.10 1.15"
+          rotation="-90 0 0">
+  </a-text>
+
+  <!-- =========================================================
+       BACK TO LOBBY
+       ========================================================= -->
+
+  <a-entity position="4.85 1.0 4.8" rotation="0 -18 0">
+    <a-plane id="backLobbyPanel"
+             class="clickable-door"
+             door-link="url:/lobi_shine_h.html"
+             width="2.7"
+             height="1.0"
+             material="color:#0c2344; metalness:0.35; roughness:0.28">
+    </a-plane>
+
+    <a-plane width="2.76"
+             height="1.06"
+             position="0 0 0.02"
+             material="color:#38a8ff; opacity:0.18; transparent:true; shader:flat">
+    </a-plane>
+
+    <a-text value="BACK TO SHINE LOBBY"
+            align="center"
+            color="#ffffff"
+            width="2.6"
+            position="0 0 0.05">
+    </a-text>
+  </a-entity>
+
+  <!-- =========================================================
+       LIGHTS
+       ========================================================= -->
+
+  <a-light type="ambient"
+           intensity="0.72"
+           color="#dce8ff">
+  </a-light>
+
+  <a-light type="directional"
+           position="0 7 4"
+           rotation="-55 0 0"
+           intensity="0.82"
+           color="#d8e8ff">
+  </a-light>
+
+  <a-light type="point"
+           position="-5 5 -6"
+           intensity="0.42"
+           distance="8"
+           decay="2"
+           color="#2aa8ff">
+  </a-light>
+
+  <a-light type="point"
+           position="5 5 -6"
+           intensity="0.36"
+           distance="8"
+           decay="2"
+           color="#8a55ff">
+  </a-light>
+
+</a-scene>
+
+
+<!-- =========================================================
+     USER INFO
+     ========================================================= -->
+<script>
+fetch("/me")
+  .then(res => res.json())
+  .then(user => {
+    document.getElementById("userInfo").innerHTML =
+      "<b>" + user.name + "</b><br>Role: " + user.role;
+  })
+  .catch(() => {
+    document.getElementById("userInfo").innerHTML =
+      "<b>SHINE User</b><br>Role: user";
+  });
+</script>
+
+
+<!-- =========================================================
+     MOVEMENT LIMITS
+     ========================================================= -->
+<script>
+AFRAME.registerComponent("room-limit", {
+  tick: function () {
+    const p = this.el.object3D.position;
+
+    if (p.x < -6.25) p.x = -6.25;
+    if (p.x >  6.25) p.x =  6.25;
+
+    if (p.z < -8.2) p.z = -8.2;
+    if (p.z >  6.5) p.z =  6.5;
+
+    p.y = 1.65;
+  }
+});
+</script>
+
+
+<!-- =========================================================
+     INTERACTION
+     ========================================================= -->
+<script>
+let activeDoorUrl = null;
+
+function enterActiveDoor() {
+  if (activeDoorUrl) {
+    window.location.href = activeDoorUrl;
+  }
+}
+
+AFRAME.registerComponent("door-link", {
+  schema: {
+    url: { type: "string" }
+  },
+
+  init: function () {
+    const cursor = document.getElementById("centerCursor");
+    const hint = document.getElementById("interactionHint");
+
+    this.el.addEventListener("mouseenter", () => {
+      activeDoorUrl = this.data.url;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#57d7ff");
+        cursor.setAttribute("scale", "1.5 1.5 1.5");
+      }
+
+      if (hint) {
+        hint.style.display = "block";
+      }
+    });
+
+    this.el.addEventListener("mouseleave", () => {
+      activeDoorUrl = null;
+
+      if (cursor) {
+        cursor.setAttribute("color", "#ffffff");
+        cursor.setAttribute("scale", "1 1 1");
+      }
+
+      if (hint) {
+        hint.style.display = "none";
+      }
+    });
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "e" || e.key === "E") {
+    enterActiveDoor();
+  }
+});
+
+document.addEventListener("mousedown", e => {
+  if (activeDoorUrl) {
+    e.preventDefault();
+    enterActiveDoor();
+  }
+});
+</script>
+
+
+<!-- =========================================================
+     SOCKET / ONLINE USERS
+     ========================================================= -->
+<script>
+window.socket = io();
+window.roomName = "uteam";
+
+window.socket.on("connect", () => {
+  console.log("Connected:", window.socket.id);
+});
+
+window.socket.on("onlineUsersUpdate", users => {
+  const list = document.getElementById("onlineUsersList");
+  const title = document.getElementById("onlineUsersTitle");
+
+  if (title) {
+    title.innerHTML = `Online Users (${users.length})`;
+  }
+
+  if (!list) return;
+
+  if (!users || users.length === 0) {
+    list.innerHTML = "No users online";
+    return;
+  }
+
+  list.innerHTML = users.map(user => {
+    return `
+      <div style="margin-bottom:6px;">
+        <span style="color:${user.color}; font-weight:bold;">●</span>
+        ${user.name}<br>
+        <span style="color:#cbd5e1; font-size:12px;">
+          ${user.role} / ${user.room}
+        </span>
+      </div>
+    `;
+  }).join("");
+});
+</script>
+
+<script src="/js/avatars.js"></script>
+<script src="/js/chat.js"></script>
+
+</body>
+</html>

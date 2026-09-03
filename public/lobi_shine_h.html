@@ -183,8 +183,87 @@ Sačuvani su ovde bez brisanja, ali kao komentar da dokument ostane validan.
   </a-plane>
 
 
+  
+  <!-- =========================================================
+       SHINE LEARNING HUB - 4 clickable areas on the main screen
+       TV object bounds from Interior 08 are centered at the rear wall.
+       Panels are placed slightly in front of the black TV surface.
+       ========================================================= -->
+
+  <!-- Top left: U-TEAM -->
+  <a-plane id="uteamHotspot"
+           class="clickable-door"
+           door-link="url: /rooms/uteam/uteam.html"
+           position="-0.82 3.28 -11.58"
+           rotation="0 0 0"
+           width="1.55"
+           height="0.72"
+           material="color:#173B68; opacity:0.72; transparent:true; side:double; depthTest:false">
+    <a-text value="U-TEAM\nMethodology"
+            align="center"
+            color="#FFFFFF"
+            width="2.7"
+            position="0 0 0.01">
+    </a-text>
+  </a-plane>
+
+  <!-- Top right: teach4TEC -->
+  <a-plane id="teach4tecHotspot"
+           class="clickable-door"
+           door-link="url: /shine/teach4tec.html"
+           position="0.82 3.28 -11.58"
+           rotation="0 0 0"
+           width="1.55"
+           height="0.72"
+           material="color:#1E4F7F; opacity:0.72; transparent:true; side:double; depthTest:false">
+    <a-text value="teach4TEC"
+            align="center"
+            color="#FFFFFF"
+            width="2.7"
+            position="0 0 0.01">
+    </a-text>
+  </a-plane>
+
+  <!-- Bottom left: teach4PHI -->
+  <a-plane id="teach4phiHotspot"
+           class="clickable-door"
+           door-link="url: /shine/teach4phi.html"
+           position="-0.82 2.50 -11.58"
+           rotation="0 0 0"
+           width="1.55"
+           height="0.72"
+           material="color:#245C8F; opacity:0.72; transparent:true; side:double; depthTest:false">
+    <a-text value="teach4PHI"
+            align="center"
+            color="#FFFFFF"
+            width="2.7"
+            position="0 0 0.01">
+    </a-text>
+  </a-plane>
+
+  <!-- Bottom right: Teaching Scenarios -->
+  <a-plane id="scenariosHotspot"
+           class="clickable-door"
+           door-link="url: /shine/scenarios.html"
+           position="0.82 2.50 -11.58"
+           rotation="0 0 0"
+           width="1.55"
+           height="0.72"
+           material="color:#2B6A9D; opacity:0.72; transparent:true; side:double; depthTest:false">
+    <a-text value="Teaching\nScenarios"
+            align="center"
+            color="#FFFFFF"
+            width="2.7"
+            position="0 0 0.01">
+    </a-text>
+  </a-plane>
+
   <a-light type="ambient" intensity="0.50"></a-light>
-  <a-light type="point" position="0 3 0" intensity="0.70"></a-light>
+  <a-light type="directional"
+         position="0 5 3"
+         rotation="-60 0 0"
+         intensity="0.60">
+  </a-light>
 
 </a-scene>
 

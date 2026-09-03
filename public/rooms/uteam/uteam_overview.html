@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SHINE - U-TEAM Overview</title>
+  <style>
+    :root{
+      --cream:#fbf4e9; --cream2:#f6ecdf; --petrol:#183a43; --orange:#ffb24a;
+      --line:#e5d8c8; --text:#28454d; --muted:#6f7d80; --white:#fffdf9;
+      --shadow:0 14px 36px rgba(70,53,33,.10);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:var(--text);line-height:1.65}
+    .topbar{position:sticky;top:0;z-index:50;height:100px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;background:rgba(251,244,233,.97);border-bottom:1px solid var(--line);box-shadow:0 4px 14px rgba(59,47,33,.06)}
+    .brand{display:flex;align-items:center;gap:20px;color:var(--petrol)}
+    .mini-logo{width:48px;height:48px}
+    .shine-word{letter-spacing:.44em;color:var(--orange);font-weight:500;font-size:16px;margin-right:-.44em}
+    .brand-sub{font-size:16px;color:#8a8f8c;letter-spacing:.04em;margin-top:2px}
+    .back{color:var(--petrol);text-decoration:none;border:1px solid #d3c5b4;border-radius:8px;padding:8px 13px;background:rgba(255,255,255,.5)}
+    .back:hover{border-color:var(--orange);background:#fff9f0}
+    .layout{display:grid;grid-template-columns:265px minmax(0,1fr);max-width:1500px;margin:0 auto;min-height:calc(100vh - 72px)}
+    aside{padding:34px 22px 50px;border-right:1px solid var(--line)}
+    .toc{position:sticky;top:102px;background:rgba(255,253,249,.7);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+    .toc h3{margin:0 0 12px;color:var(--petrol);font-size:14px;text-transform:uppercase;letter-spacing:.11em}
+    .toc a{display:block;color:#6f7d80;text-decoration:none;padding:7px 8px;border-left:2px solid transparent;font-size:14px}
+    .toc a:hover{color:var(--petrol);border-left-color:var(--orange);background:#fff7eb}
+    main{padding:42px 48px 70px;min-width:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;align-items:center;padding:46px 48px;border:1px solid var(--line);border-radius:18px;background:var(--white);box-shadow:var(--shadow);margin-bottom:32px}
+    .eyebrow{color:var(--orange);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:bold;margin-bottom:10px}
+    h1{margin:0;color:var(--petrol);font-family:Georgia,"Times New Roman",serif;font-size:46px;line-height:1.12;letter-spacing:-.02em}
+    .lead{color:#51656a;font-size:18px;max-width:900px;margin:20px 0 0}
+    .hero-logo{min-height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--orange)}
+    .hero-logo .word{font-size:25px;letter-spacing:.52em;margin-right:-.52em;margin-bottom:16px}
+    .hero-logo svg{width:190px;height:190px;overflow:visible;filter:drop-shadow(0 7px 15px rgba(255,178,74,.12))}
+    section{margin-top:30px;scroll-margin-top:105px}
+    h2{margin:0 0 16px;color:var(--petrol);font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.2}
+    h3{color:var(--petrol)}
+    p{color:#57696d;margin:0 0 14px}
+    .card{background:rgba(255,253,249,.78);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:0 8px 24px rgba(74,56,35,.06)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .principle{min-height:168px}.principle .num{font-size:12px;letter-spacing:.14em;color:var(--orange);font-weight:bold}.principle h3{margin:8px 0 8px;font-size:18px}.principle p{font-size:14px;margin:0}
+    .directions{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .direction{padding:28px;border-radius:16px;border:1px solid;background:var(--white);box-shadow:0 8px 24px rgba(74,56,35,.06)}
+    .tec{border-color:#bfd0c5}.phi{border-color:#d7c8dc}
+    .direction h3{font-size:26px;margin:0 0 9px}.direction .tag{display:inline-block;font-size:12px;padding:5px 9px;border-radius:20px;margin-bottom:13px;letter-spacing:.07em;text-transform:uppercase}
+    .tec .tag{color:#3e6150;background:#edf5ef;border:1px solid #c6d8cb}.phi .tag{color:#684e73;background:#f5eef7;border:1px solid #dccce1}
+    .method-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .flow-step{text-align:center;padding:20px 12px;background:var(--white);border:1px solid var(--line);border-radius:12px;min-height:128px;display:flex;flex-direction:column;justify-content:center;position:relative}
+    .flow-step:not(:last-child):after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:22px;z-index:3}
+    .flow-step strong{display:block;font-size:15px;color:var(--petrol);margin-bottom:7px}.flow-step span{color:#78878a;font-size:13px}
+    .usecase{position:relative;overflow:hidden}.usecase:before{content:"";position:absolute;width:4px;top:0;left:0;bottom:0;background:var(--orange)}
+    .usecase.tec-case:before{background:#7ea28b}.usecase.phi-case:before{background:#9b7aaa}
+    .usecase h3{margin:0 0 8px 4px;font-size:17px}.usecase p{font-size:14px;margin-left:4px}
+    .callout{border-left:4px solid var(--orange);background:#fff7eb;padding:18px 20px;border-radius:0 12px 12px 0;color:#52666a;margin-top:16px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+    .btn{text-decoration:none;color:var(--petrol);padding:11px 15px;border-radius:8px;border:1px solid #d4c5b3;background:#fffaf3}
+    .btn.green{background:#eff6f1;border-color:#c2d2c6;color:#3c5f4c}.btn.violet{background:#f6f0f8;border-color:#d8cadc;color:#654d70}
+    footer{margin-top:42px;padding-top:22px;border-top:1px solid var(--line);color:#879394;font-size:13px}
+    @media (max-width:1100px){.layout{grid-template-columns:1fr}aside{display:none}main{padding:28px 22px 55px}.hero{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}.method-flow{grid-template-columns:1fr}.flow-step:not(:last-child):after{display:none}}
+    @media (max-width:720px){.topbar{padding:0 16px}h1{font-size:34px}.hero{padding:32px 24px}.grid-2,.grid-3,.directions{grid-template-columns:1fr}}
+  
+    .page-logo-small{
+      width:90px;
+      height:auto;
+      display:block;
+      object-fit:contain;
+    }
+    .page-logo-large{
+      width:100%;
+      max-width:240px;
+      height:auto;
+      display:block;
+      object-fit:contain;
+      margin:0 auto;
+    }
+
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img class="page-logo-small" src="/assets/logo.png" alt="SHINE logo">
+    <div class="brand-sub">U-TEAM methodology</div>
+  </div>
+  <a class="back" href="/rooms/uteam/uteam.html">← Back to U-TEAM Room</a>
+</header>
+
+<div class="layout">
+<aside>
+  <nav class="toc">
+    <h3>U-TEAM Overview</h3>
+    <a href="#what">What is U-TEAM?</a><a href="#why">Why U-TEAM?</a><a href="#principles">Core principles</a><a href="#directions">Two methodological directions</a><a href="#flow">Application logic</a><a href="#cases">Application cases</a><a href="#next">From methodology to practice</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="hero">
+    <div>
+      <div class="eyebrow">SHINE · Innovative University Teaching Methodologies</div>
+      <h1>U-TEAM Methodology Overview</h1>
+      <p class="lead">U-TEAM is the unified methodological framework developed within SHINE to support cross-disciplinary innovation in university teaching. It combines pedagogical and psychological principles with STEM/STEAM-oriented approaches while preserving the disciplinary standards of the field in which learning takes place.</p>
+    </div>
+    <div class="hero-logo">
+      <div class="word">SHINE</div>
+      <svg viewBox="0 0 220 220" aria-label="SHINE logo">
+        <g fill="none" stroke="#ffb24a" stroke-width="4">
+          <polygon points="110,45 157,72 157,128 110,155 63,128 63,72"/>
+          <line x1="110" y1="45" x2="110" y2="17"/><line x1="157" y1="72" x2="184" y2="53"/><line x1="157" y1="128" x2="184" y2="148"/><line x1="110" y1="155" x2="110" y2="187"/><line x1="63" y1="128" x2="35" y2="148"/><line x1="63" y1="72" x2="35" y2="53"/>
+          <circle cx="110" cy="17" r="5" fill="#ffb24a"/><circle cx="184" cy="53" r="5" fill="#ffb24a"/><circle cx="184" cy="148" r="5" fill="#ffb24a"/><circle cx="110" cy="187" r="5" fill="#ffb24a"/><circle cx="35" cy="148" r="5" fill="#ffb24a"/><circle cx="35" cy="53" r="5" fill="#ffb24a"/>
+        </g>
+        <g fill="#ffb24a"><path d="M82 87 Q96 80 108 90 L108 123 Q95 113 82 118 Z"/><path d="M138 87 Q124 80 112 90 L112 123 Q125 113 138 118 Z"/></g>
+      </svg>
+    </div>
+  </div>
+
+  <section id="what"><h2>1. What is U-TEAM?</h2><div class="card">
+    <p>U-TEAM is conceived as an integrated methodological framework rather than as a single teaching technique. Its purpose is to assemble and adapt appropriate teaching approaches so that they can be transferred across disciplinary boundaries in a controlled and educationally meaningful way.</p>
+    <p>The framework has two complementary directions. <strong>teach4TEC</strong> applies pedagogical-psychological principles and teaching approaches to technical and engineering education. <strong>teach4PHI</strong> transfers selected STEM/STEAM principles and practices into humanities, philology and related social-science learning contexts.</p>
+    <p>These two directions are connected by a common U-TEAM logic: the imported methodology supports learning, but the target discipline continues to define what counts as valid knowledge, competent performance and acceptable evidence.</p>
+  </div></section>
+
+  <section id="why"><h2>2. Why U-TEAM?</h2><div class="grid-2">
+    <div class="card"><h3>Cross-disciplinary transfer</h3><p>University teaching often develops within disciplinary silos. U-TEAM provides a structured way to transfer educational mechanisms from one domain to another without simply copying a method out of context.</p></div>
+    <div class="card"><h3>From method selection to method configuration</h3><p>The framework starts from the learning problem and the disciplinary objective. Teaching approaches are selected and adapted because they respond to that problem, not because they appear innovative by themselves.</p></div>
+    <div class="card"><h3>Visible learning processes</h3><p>U-TEAM makes reasoning, collaboration, evidence use, reflection and revision visible so that teaching can address the process through which competence is developed, not only the final result.</p></div>
+    <div class="card"><h3>Educational usability</h3><p>The methodology is intended to support practical implementation. Its theoretical framework is therefore connected with application cases and, subsequently, with detailed teaching scenarios for classroom and online use.</p></div>
+  </div></section>
+
+  <section id="principles"><h2>3. Core U-TEAM Principles</h2><div class="grid-3">
+    <div class="card principle"><div class="num">01</div><h3>Disciplinary invariance</h3><p>Cross-disciplinary teaching methods may change how learning is organised, but the target discipline retains authority over knowledge quality and valid performance.</p></div>
+    <div class="card principle"><div class="num">02</div><h3>Context-driven selection</h3><p>Methodological elements are selected in response to a diagnosed educational difficulty and the characteristics of the disciplinary task.</p></div>
+    <div class="card principle"><div class="num">03</div><h3>Scaffolding</h3><p>Temporary structure supports learners when complexity exceeds their current capacity, while responsibility is progressively transferred back to them.</p></div>
+    <div class="card principle"><div class="num">04</div><h3>Progressive autonomy</h3><p>Guidance decreases as competence develops so that students increasingly regulate decisions, inquiry and problem solving independently.</p></div>
+    <div class="card principle"><div class="num">05</div><h3>Evidence-based regulation</h3><p>Student work, reasoning and feedback provide evidence for revising both the learning activity and the methodological configuration.</p></div>
+    <div class="card principle"><div class="num">06</div><h3>Reflection and refinement</h3><p>Learners and educators explicitly examine what worked, what failed and which methodological elements should be retained, reduced or changed.</p></div>
+  </div>
+  <div class="callout">U-TEAM does not define innovation as the simple presence of technology, group work, simulation, project activity or digital tools. Innovation lies in the deliberate configuration of teaching mechanisms around a real learning problem.</div>
+  </section>
+
+  <section id="directions"><h2>4. Two Methodological Directions</h2><div class="directions">
+    <div class="direction tec"><span class="tag">teach4TEC</span><h3>Pedagogical-psychological principles for technical education</h3><p>teach4TEC applies relevant pedagogical and psychological mechanisms to engineering and technical disciplines. Typical mechanisms include scaffolding, management of cognitive demands, structured collaboration, feedback, self-explanation, reflection and progressive transfer of responsibility.</p><p>The technical task itself remains central. U-TEAM does not lower the engineering standard; it improves the learning conditions through which students reach that standard.</p><a class="btn green" href="/rooms/uteam/teach4tec.html">Open teach4TEC →</a></div>
+    <div class="direction phi"><span class="tag">teach4PHI</span><h3>STEM/STEAM principles for humanities and social sciences</h3><p>teach4PHI transfers selected STEM/STEAM ways of working into humanities, philology and related social-science contexts. Relevant mechanisms include inquiry, systematic evidence use, design thinking, project work, data literacy, prototyping and iterative revision.</p><p>These approaches enrich the learning process but do not replace interpretation, contextual judgement, linguistic validity or other disciplinary standards.</p><a class="btn violet" href="/rooms/uteam/teach4phi.html">Open teach4PHI →</a></div>
+  </div></section>
+
+  <section id="flow"><h2>5. U-TEAM Application Logic</h2><div class="method-flow">
+    <div class="flow-step"><strong>1. Disciplinary context</strong><span>Identify the target discipline, learners and authentic task.</span></div>
+    <div class="flow-step"><strong>2. Learning problem</strong><span>Diagnose the educational obstacle that limits competence development.</span></div>
+    <div class="flow-step"><strong>3. U-TEAM configuration</strong><span>Select teach4TEC or teach4PHI principles appropriate to the problem.</span></div>
+    <div class="flow-step"><strong>4. Learning redesign</strong><span>Adapt activities while preserving the disciplinary objective.</span></div>
+    <div class="flow-step"><strong>5. Evidence & refinement</strong><span>Evaluate learning evidence and refine the methodological configuration.</span></div>
+  </div></section>
+
+  <section id="cases"><h2>6. Practical Application Cases</h2><p>The U-TEAM methodology is connected with practical application cases that show how the same framework can be instantiated differently depending on the discipline and the educational problem.</p>
+    <h3>teach4TEC application cases</h3><div class="grid-3">
+      <div class="card usecase tec-case"><h3>Concurrent Engineering Product-Design Studio</h3><p>Structured multidisciplinary design work focused on interfaces, constraints, trade-offs and progressive system-level reasoning.</p></div>
+      <div class="card usecase tec-case"><h3>CAD/CAE Modelling and Simulation</h3><p>Development of modelling judgement through prediction, assumption analysis, verification and interpretation rather than software operation alone.</p></div>
+      <div class="card usecase tec-case"><h3>Manufacturing Laboratory and Process Planning</h3><p>Transition from procedural compliance toward causal reasoning, controlled inquiry, evidence use and justified process decisions.</p></div>
+    </div>
+    <h3 style="margin-top:24px;">teach4PHI application cases</h3><div class="grid-3">
+      <div class="card usecase phi-case"><h3>Literature and Cultural Studies through Digital Humanities Inquiry</h3><p>Combination of close reading, systematic evidence and digital inquiry while keeping contextual humanistic interpretation central.</p></div>
+      <div class="card usecase phi-case"><h3>Cultural Studies through Project- and Design-Based Learning</h3><p>Application of problem framing, audience analysis, design thinking, prototyping and iterative revision to contemporary cultural issues.</p></div>
+      <div class="card usecase phi-case"><h3>Philology and Linguistics through Data-Driven Inquiry</h3><p>Use of systematic textual evidence and data-oriented inquiry to support, challenge and refine disciplinary interpretation.</p></div>
+    </div>
+  </section>
+
+  <section id="next"><h2>7. From Methodology to Teaching Practice</h2><div class="card">
+    <p>U-TEAM provides the methodological logic. Practical application cases demonstrate how the framework operates in selected disciplinary contexts. Detailed Teaching Scenarios then translate these configurations into concrete classroom or online teaching activities with defined learning outcomes, timing, roles, interaction, resources, outputs and assessment.</p>
+    <div class="callout"><strong>U-TEAM theoretical framework → teach4TEC / teach4PHI → application case → teaching scenario → implementation and evaluation</strong></div>
+    <div class="actions"><a class="btn" href="/rooms/uteam/uteam.html">← Back to U-TEAM Room</a><a class="btn green" href="/rooms/uteam/teach4tec.html">Explore teach4TEC</a><a class="btn violet" href="/rooms/uteam/teach4phi.html">Explore teach4PHI</a><a class="btn" href="/rooms/uteam/uteam_model.html">Unified U-TEAM Model</a></div>
+  </div></section>
+
+  <footer>SHINE · Strategic Higher-Education Initiative for Networking and Engineering · U-TEAM Methodology.</footer>
+</main>
+</div>
+</body>
+</html>
