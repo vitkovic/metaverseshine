@@ -1,116 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SHINE - teach4TEC Approach</title>
-  <style>
-    :root{
-      --cream:#fbf4e9; --cream2:#f6ecdf; --petrol:#183a43; --orange:#ffb24a;
-      --line:#e5d8c8; --text:#28454d; --muted:#6f7d80; --white:#fffdf9;
-      --shadow:0 14px 36px rgba(70,53,33,.10);
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:var(--text);line-height:1.65}
-    .topbar{position:sticky;top:0;z-index:50;height:100px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;background:rgba(251,244,233,.97);border-bottom:1px solid var(--line);box-shadow:0 4px 14px rgba(59,47,33,.06)}
-    .brand{display:flex;align-items:center;gap:20px;color:var(--petrol)}
-    .mini-logo{width:48px;height:48px}
-    .shine-word{letter-spacing:.44em;color:var(--orange);font-weight:500;font-size:16px;margin-right:-.44em}
-    .brand-sub{font-size:16px;color:#8a8f8c;letter-spacing:.04em;margin-top:2px}
-    .back{color:var(--petrol);text-decoration:none;border:1px solid #d3c5b4;border-radius:8px;padding:8px 13px;background:rgba(255,255,255,.5)}
-    .back:hover{border-color:var(--orange);background:#fff9f0}
-    .layout{display:grid;grid-template-columns:265px minmax(0,1fr);max-width:1500px;margin:0 auto;min-height:calc(100vh - 72px)}
-    aside{padding:34px 22px 50px;border-right:1px solid var(--line)}
-    .toc{position:sticky;top:102px;background:rgba(255,253,249,.7);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
-    .toc h3{margin:0 0 12px;color:var(--petrol);font-size:14px;text-transform:uppercase;letter-spacing:.11em}
-    .toc a{display:block;color:#6f7d80;text-decoration:none;padding:7px 8px;border-left:2px solid transparent;font-size:14px}
-    .toc a:hover{color:var(--petrol);border-left-color:var(--orange);background:#fff7eb}
-    main{padding:42px 48px 70px;min-width:0}
-    .hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;align-items:center;padding:46px 48px;border:1px solid var(--line);border-radius:18px;background:var(--white);box-shadow:var(--shadow);margin-bottom:32px}
-    .eyebrow{color:var(--orange);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:bold;margin-bottom:10px}
-    h1{margin:0;color:var(--petrol);font-family:Georgia,"Times New Roman",serif;font-size:46px;line-height:1.12;letter-spacing:-.02em}
-    .lead{color:#51656a;font-size:18px;max-width:900px;margin:20px 0 0}
-    .hero-logo{min-height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--orange)}
-    .hero-logo .word{font-size:25px;letter-spacing:.52em;margin-right:-.52em;margin-bottom:16px}
-    .hero-logo svg{width:190px;height:190px;overflow:visible;filter:drop-shadow(0 7px 15px rgba(255,178,74,.12))}
-    section{margin-top:30px;scroll-margin-top:105px}
-    h2{margin:0 0 16px;color:var(--petrol);font-family:Georgia,"Times New Roman",serif;font-size:29px;line-height:1.2}
-    h3{color:var(--petrol)}
-    p{color:#57696d;margin:0 0 14px}
-    .card{background:rgba(255,253,249,.78);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:0 8px 24px rgba(74,56,35,.06)}
-    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .principle{min-height:168px}.principle .num{font-size:12px;letter-spacing:.14em;color:var(--orange);font-weight:bold}.principle h3{margin:8px 0 8px;font-size:18px}.principle p{font-size:14px;margin:0}
-    .directions{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .direction{padding:28px;border-radius:16px;border:1px solid;background:var(--white);box-shadow:0 8px 24px rgba(74,56,35,.06)}
-    .tec{border-color:#bfd0c5}.phi{border-color:#d7c8dc}
-    .direction h3{font-size:26px;margin:0 0 9px}.direction .tag{display:inline-block;font-size:12px;padding:5px 9px;border-radius:20px;margin-bottom:13px;letter-spacing:.07em;text-transform:uppercase}
-    .tec .tag{color:#3e6150;background:#edf5ef;border:1px solid #c6d8cb}.phi .tag{color:#684e73;background:#f5eef7;border:1px solid #dccce1}
-    .method-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-    .flow-step{text-align:center;padding:20px 12px;background:var(--white);border:1px solid var(--line);border-radius:12px;min-height:128px;display:flex;flex-direction:column;justify-content:center;position:relative}
-    .flow-step:not(:last-child):after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:22px;z-index:3}
-    .flow-step strong{display:block;font-size:15px;color:var(--petrol);margin-bottom:7px}.flow-step span{color:#78878a;font-size:13px}
-    .usecase{position:relative;overflow:hidden}.usecase:before{content:"";position:absolute;width:4px;top:0;left:0;bottom:0;background:var(--orange)}
-    .usecase.tec-case:before{background:#7ea28b}.usecase.phi-case:before{background:#9b7aaa}
-    .usecase h3{margin:0 0 8px 4px;font-size:17px}.usecase p{font-size:14px;margin-left:4px}
-    .callout{border-left:4px solid var(--orange);background:#fff7eb;padding:18px 20px;border-radius:0 12px 12px 0;color:#52666a;margin-top:16px}
-    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
-    .btn{text-decoration:none;color:var(--petrol);padding:11px 15px;border-radius:8px;border:1px solid #d4c5b3;background:#fffaf3}
-    .btn.green{background:#eff6f1;border-color:#c2d2c6;color:#3c5f4c}.btn.violet{background:#f6f0f8;border-color:#d8cadc;color:#654d70}
-    footer{margin-top:42px;padding-top:22px;border-top:1px solid var(--line);color:#879394;font-size:13px}
-    @media (max-width:1100px){.layout{grid-template-columns:1fr}aside{display:none}main{padding:28px 22px 55px}.hero{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}.method-flow{grid-template-columns:1fr}.flow-step:not(:last-child):after{display:none}}
-    @media (max-width:720px){.topbar{padding:0 16px}h1{font-size:34px}.hero{padding:32px 24px}.grid-2,.grid-3,.directions{grid-template-columns:1fr}}
-  
-    .page-logo-small{
-      width:90px;
-      height:auto;
-      display:block;
-      object-fit:contain;
-    }
-    .page-logo-large{
-      width:100%;
-      max-width:240px;
-      height:auto;
-      display:block;
-      object-fit:contain;
-      margin:0 auto;
-    }
-
-  </style>
+<meta charset="utf-8">
+<title>SHINE - teach4TEC Approach</title>
+<style>
+:root{
+--cream:#fbf4e9;--petrol:#183a43;--orange:#ffb24a;
+--line:#e5d8c8;--text:#28454d;--white:#fffdf9;
+}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--cream);color:var(--text);line-height:1.65}
+.topbar{height:100px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;background:#fbf4e9;border-bottom:1px solid var(--line)}
+.layout{display:grid;grid-template-columns:265px 1fr;max-width:1500px;margin:auto}
+aside{padding:34px 22px}
+.toc{background:#fffdf9;border:1px solid var(--line);border-radius:14px;padding:18px}
+.toc a{display:block;color:#6f7d80;text-decoration:none;padding:7px}
+main{padding:42px 48px}
+.hero,.card{background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 36px rgba(70,53,33,.1)}
+.hero{padding:46px 48px;margin-bottom:32px}
+.card{padding:26px;margin:22px 0}
+h1,h2,h3{color:var(--petrol)}
+.eyebrow{color:#8a8f8c}
+.callout{border-left:4px solid var(--orange);background:#fff7eb;padding:18px}
+</style>
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">
-    <img class="page-logo-small" src="/assets/logo.png" alt="SHINE logo">
-    <div class="brand-sub">U-TEAM methodology</div>
-  </div>
-  <a class="back" href="/rooms/uteam/uteam.html">← Back to U-TEAM Room</a>
+<div><b style="color:#ffb24a">SHINE</b><br>U-TEAM methodology</div>
+<a href="/rooms/uteam/uteam.html">← Back to U-TEAM Room</a>
 </header>
 
 <div class="layout">
 <aside>
-  <nav class="toc">
-    <h3>U-TEAM Overview</h3>
-    <a href="#what">What is U-TEAM?</a><a href="#why">Why U-TEAM?</a><a href="#principles">Core principles</a><a href="#directions">Two methodological directions</a><a href="#flow">Application logic</a><a href="#cases">Application cases</a><a href="#next">From methodology to practice</a>
-  </nav>
+<div class="toc">
+<h3>teach4TEC</h3>
+<a href="#what">What is teach4TEC?</a>
+<a href="#why">Why teach4TEC?</a>
+<a href="#principles">Core principles</a>
+<a href="#mechanisms">Learning mechanisms</a>
+<a href="#cases">Application cases</a>
+<a href="#practice">From methodology to practice</a>
+</div>
 </aside>
 
 <main>
 
-<section id="what"><h2>1. What is teach4TEC?</h2><div class="card">
-<p>teach4TEC is the U-TEAM methodological direction focused on technical and engineering education. It introduces pedagogical and psychological mechanisms into technical learning without changing the requirements of the engineering field.</p>
-</div></section>
-<section id="principles"><h2>2. Core Principles</h2><div class="grid-3">
-<div class="card"><h3>Scaffolding</h3><p>Temporary learning support helps students manage complex technical tasks and progressively develop independence.</p></div>
-<div class="card"><h3>Cognitive Demand Management</h3><p>Learning activities are structured according to the complexity of technical reasoning and problem solving.</p></div>
-<div class="card"><h3>Feedback and Reflection</h3><p>Students analyse decisions, results and improvements through structured feedback processes.</p></div>
-</div></section>
-<section id="cases"><h2>3. Application Areas</h2><div class="card">
-<p>Engineering education, CAD/CAE modelling and simulation, manufacturing laboratories, design projects and technical problem-solving activities.</p>
-</div></section>
+<div class="hero">
+<div class="eyebrow">SHINE · Innovative University Teaching Methodologies</div>
+<h1>teach4TEC Approach</h1>
+<p>teach4TEC is the U-TEAM methodological direction focused on technical and engineering education. It applies pedagogical-psychological principles and teaching approaches to improve the conditions through which students develop technical competence while preserving the standards of the engineering discipline.</p>
+</div>
 
-<footer>SHINE · Strategic Higher-Education Initiative for Networking and Engineering · U-TEAM Methodology.</footer>
+<section id="what">
+<h2>1. What is teach4TEC?</h2>
+<div class="card">
+<p>teach4TEC represents the application of pedagogical and psychological knowledge within technical education. The approach does not replace technical knowledge or reduce engineering requirements. Instead, it focuses on how complex technical knowledge is acquired, structured, practised and transferred into professional problem solving.</p>
+<p>The technical task remains central, while the learning process is redesigned to support understanding, reasoning, decision making and progressive independence.</p>
+</div>
+</section>
+
+<section id="why">
+<h2>2. Why teach4TEC?</h2>
+<div class="card">
+<p>Technical disciplines often require students to combine abstract concepts, mathematical reasoning, modelling, simulation and practical decisions. teach4TEC addresses the educational challenge of supporting students while maintaining the authenticity and complexity of engineering tasks.</p>
+<p>The approach moves learning beyond simple procedural execution towards explanation, verification, interpretation and justified technical decisions.</p>
+</div>
+</section>
+
+<section id="principles">
+<h2>3. Core teach4TEC Principles</h2>
+<div class="card">
+<h3>Scaffolding</h3>
+<p>Temporary structures and guidance support students when technical complexity exceeds their current capacity, while responsibility is gradually transferred to the learner.</p>
+<h3>Cognitive Demand Management</h3>
+<p>Learning activities are organised according to the complexity of technical reasoning and the level of competence being developed.</p>
+<h3>Structured Collaboration</h3>
+<p>Students develop engineering understanding through interaction, explanation and collaborative problem solving.</p>
+<h3>Feedback and Reflection</h3>
+<p>Feedback supports analysis of decisions, results and improvement of future technical actions.</p>
+<h3>Progressive Autonomy</h3>
+<p>Guidance decreases as students become capable of independently managing technical decisions.</p>
+</div>
+</section>
+
+<section id="mechanisms">
+<h2>4. Learning Mechanisms</h2>
+<div class="card">
+<p>teach4TEC uses mechanisms such as self-explanation, guided inquiry, reflection, structured practice and evidence-based improvement to make technical learning processes visible and manageable.</p>
+</div>
+</section>
+
+<section id="cases">
+<h2>5. Application Cases</h2>
+<div class="card">
+<h3>CAD/CAE Modelling and Simulation</h3>
+<p>Development of modelling judgement through prediction, assumption analysis, verification and interpretation rather than software operation alone.</p>
+<h3>Manufacturing Laboratory and Process Planning</h3>
+<p>Transition from procedural compliance towards causal reasoning, evidence use and justified process decisions.</p>
+<h3>Engineering Design Activities</h3>
+<p>Support for multidisciplinary reasoning, constraints analysis and system-level decision making.</p>
+</div>
+</section>
+
+<section id="practice">
+<h2>6. From Methodology to Practice</h2>
+<div class="card">
+<p>teach4TEC provides the methodological foundation for creating concrete teaching scenarios with defined learning outcomes, activities, resources, assessment and evaluation.</p>
+<div class="callout"><b>U-TEAM framework → teach4TEC → technical learning problem → teaching scenario → implementation and refinement</b></div>
+</div>
+</section>
+
+<footer>SHINE · U-TEAM Methodology</footer>
+
 </main>
 </div>
 </body>
