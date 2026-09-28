@@ -1,6 +1,6 @@
-# BioMedix Metaverse
+# Shine Metaverse
 
-BioMedix Metaverse is a browser-based multi-user virtual collaboration platform developed at the Faculty of Mechanical Engineering, University of Niš. The platform provides shared virtual spaces for education, research, engineering collaboration and future biomedical metaverse applications.
+Shine Metaverse is a browser-based multi-user virtual collaboration platform developed at the Faculty of Mechanical Engineering, University of Niš. The platform provides shared virtual spaces for education, research, engineering collaboration and future biomedical metaverse applications.
 
 The current prototype demonstrates real-time interaction, collaborative content sharing and room-based communication using modern open-source web technologies.
 
@@ -80,7 +80,7 @@ The prototype currently supports four user roles:
 ## Project Structure
 
 ```text
-metaversebiomedix/
+metaverseShine/
 │
 ├── public/
 │   ├── assets/
@@ -101,8 +101,8 @@ metaversebiomedix/
 Clone the repository:
 
 ```bash
-git clone https://github.com/vitkovic/metaversebiomedix.git
-cd metaversebiomedix
+git clone https://github.com/vitkovic/metaverseShine.git
+cd metaverseShine
 ```
 
 Install dependencies:
@@ -144,7 +144,7 @@ The current implementation includes:
 
 ## Future Development
 
-The BioMedix Metaverse platform is designed as a scalable framework for future biomedical, educational and industrial metaverse applications.
+The Shine Metaverse platform is designed as a scalable framework for future biomedical, educational and industrial metaverse applications.
 
 Planned developments include:
 
@@ -177,4 +177,4 @@ Faculty of Mechanical Engineering
 University of Niš, Serbia
 
 GitHub Repository:
-https://github.com/vitkovic/metaversebiomedix
+https://github.com/vitkovic/metaverseShine
