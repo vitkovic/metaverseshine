@@ -144,7 +144,7 @@ The current implementation includes:
 
 ## Future Development
 
-The Shine Metaverse platform is designed as a scalable framework for future biomedical, educational and industrial metaverse applications.
+The Shine Metaverse platform is designed as a scalable framework for future educational and industrial metaverse applications.
 
 Planned developments include:
 
